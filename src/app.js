@@ -5,6 +5,9 @@ const cors = require('cors');
 const passport = require('passport');
 const httpStatus = require('http-status');
 var path = require('path');
+var multer = require('multer');
+var bodyParser = require('body-parser');
+var forms = multer();
 
 const auth = require('./middlewares/auth');
 const config = require('./config/config');
@@ -27,6 +30,9 @@ app.use(helmet());
 
 // JSON requests are received as plain text. We need to parse the json request body.
 app.use(express.json());
+
+// app.use(bodyParser.urlencoded({ extended: true }));
+app.use(forms.array());
 
 // Parse urlencoded request body if provided with any of the requests
 app.use(express.urlencoded({ extended: true }));

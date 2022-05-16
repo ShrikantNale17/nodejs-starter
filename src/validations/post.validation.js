@@ -5,7 +5,7 @@ const createPost = {
     body: Joi.object().keys({
         // email: Joi.string().required().email(),
         // password: Joi.string().required().custom(password),
-        caption: Joi.string().required(),
+        caption: Joi.string(),
         image: Joi.string(),
         // role: Joi.string().required().valid('user', 'admin'),
     }),

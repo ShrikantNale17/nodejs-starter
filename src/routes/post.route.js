@@ -1,7 +1,7 @@
 const express = require('express');
 const auth = require('../middlewares/auth');
 const validate = require('../middlewares/validate');
-const upload = require('../middlewares/imageUploader')
+const upload = require('../middlewares/imageUploader');
 const postValidation = require('../validations/post.validation');
 const postController = require('../controllers/post.controller');
 
@@ -15,7 +15,7 @@ router.use(auth());
 // Routes: get posts, create post
 router
     .route('/')
-    .post(upload, validate(postValidation.createPost), postController.createPost)
+    .post(validate(postValidation.createPost), upload.array('image', 5), postController.createPost)
     .get(validate(postValidation.getPosts), postController.getPosts);
 
 // Routes: get one post, update post, delete post

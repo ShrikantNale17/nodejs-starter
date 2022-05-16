@@ -2,11 +2,13 @@ const httpStatus = require('http-status');
 const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
+const upload = require('../middlewares/imageUploader')
 const {
     postService
 } = require('../services');
 
 const createPost = catchAsync(async (req, res) => {
+    console.log(req.body);
     const post = await postService.createPost({
         createdBy: req.user._id,
         caption: req.body.caption,

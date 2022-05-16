@@ -42,6 +42,12 @@ const updateUser = catchAsync(async (req, res) => {
   res.send(user);
 });
 
+const updateUserProfilePic = catchAsync(async (req, res) => {
+  const user = await userService.updateUserById(req.params.userId, { image: req.file.filename })
+  // .populate("_id firstname email");
+  res.send(user);
+});
+
 const updateOrg = catchAsync(async (req, res) => {
   const org = await userService.updateOrgById(req.params.orgId, req.body);
   res.send(org);
@@ -57,6 +63,7 @@ module.exports = {
   getUsers,
   getUser,
   updateUser,
+  updateUserProfilePic,
   deleteUser,
   updateOrg,
 };

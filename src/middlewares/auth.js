@@ -12,15 +12,20 @@ const verifyCallback = (req, resolve, reject, requiredRights) => {
     }
 
     // Reject request if user was deleted
-    if(user.deleted) {
+    if (user.deleted) {
       return reject(new ApiError(httpStatus.UNAUTHORIZED, 'User deleted'))
     }
 
     req.user = user;
 
+    console.log("Hello");
     if (requiredRights.length) {
       const userRights = roleRights.get(user.role);
       const hasRequiredRights = requiredRights.every((requiredRight) => userRights.includes(requiredRight));
+      console.log("Hello");
+      console.log(
+        !hasRequiredRights && req.params.userId !== user._id + ""
+      );
       if (!hasRequiredRights && req.params.userId !== user._id + "") {
         return reject(new ApiError(httpStatus.FORBIDDEN, 'Forbidden'));
       }
@@ -32,11 +37,12 @@ const verifyCallback = (req, resolve, reject, requiredRights) => {
 
 // Access token authentication middleware
 const auth = (...requiredRights) => async (req, res, next) => {
+  console.log(req.headers);
   return new Promise((resolve, reject) => {
-      passport.authenticate('jwt', {
-        session: false
-      }, verifyCallback(req, resolve, reject, requiredRights))(req, res, next);
-    })
+    passport.authenticate('jwt', {
+      session: false
+    }, verifyCallback(req, resolve, reject, requiredRights))(req, res, next);
+  })
     .then(() => next())
     .catch((err) => next(err));
 };

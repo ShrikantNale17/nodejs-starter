@@ -10,12 +10,12 @@ const ApiError = require('../utils/ApiError');
  * @param {Object} orgBody
  * @returns {Promise<Post>}
  */
-const createUser = async (orgBody) => {
+/* const createUser = async (orgBody) => {
     if (await PostUsers.isEmailTaken(orgBody.email)) {
         throw new ApiError(httpStatus.BAD_REQUEST, 'User already exists with this email');
     }
     return PostUsers.create({ ...orgBody, name: orgBody.company });
-};
+}; */
 
 /**
  * Create a post
@@ -57,11 +57,12 @@ const getPostById = async (id) => {
  * @param {string} email
  * @returns {Promise<Post>}
  */
-const getPostByEmail = async (email) => {
+
+/* const getPostByEmail = async (email) => {
     return Post.findOne({
         email
     });
-};
+}; */
 
 /**
  * Update post by id
@@ -126,7 +127,8 @@ const commentOnPostById = async (postId, updateBody) => {
  * @param {Object} updateBody
  * @returns {Promise<Organization>}
  */
-const updateOrgById = async (orgId, updateBody) => {
+
+/* const updateOrgById = async (orgId, updateBody) => {
     const org = await Organization.findById(orgId);
     if (!org) {
         throw new ApiError(httpStatus.BAD_REQUEST, 'Organization not found');
@@ -137,7 +139,7 @@ const updateOrgById = async (orgId, updateBody) => {
     Object.assign(org, updateBody);
     await org.save();
     return org;
-};
+}; */
 
 /**
  * Delete post by id
@@ -155,13 +157,10 @@ const deletePostById = async (postId) => {
 
 module.exports = {
     createPost,
-    createUser,
     queryPosts,
     getPostById,
-    getPostByEmail,
     updatePostById,
     likePostById,
     commentOnPostById,
-    updateOrgById,
     deletePostById,
 };

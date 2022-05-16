@@ -1,4 +1,5 @@
 const multer = require('multer');
+// const logger =
 
 const upload = multer({
     storage: multer.diskStorage({
@@ -6,6 +7,7 @@ const upload = multer({
             cb(null, 'src/uploads')
         },
         filename: function (req, file, cb) {
+            console.log(file);
             cb(null, file.fieldname + '-' + Date.now() + '.jpg')
         }
     }),
@@ -15,7 +17,8 @@ const upload = multer({
             return cb(new Error("Please upload a Image"));
         }
         cb(undefined, true);
+        // cb(undefined, {...req.body, file});
     }
-}).array('image', 5)
+})
 
 module.exports = upload
