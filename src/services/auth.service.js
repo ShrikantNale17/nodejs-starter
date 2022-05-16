@@ -16,6 +16,9 @@ const loginUserWithEmailAndPassword = async (email, password) => {
   if (!user || user.deleted || !(await user.isPasswordMatch(password))) {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect email or password');
   }
+  if (!user || user.deleted || !user.isEmailVerified) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'Email verification required');
+  }
   return await user.populate("firstname email");
 };
 
