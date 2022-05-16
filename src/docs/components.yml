@@ -1,0 +1,166 @@
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        _id:
+          type: string
+        name:
+          type: string
+        _org: 
+          type: object
+          properties:
+            _id: 
+              type: string
+            name:
+              type: string
+            email:
+              type: string
+        email:
+          type: string
+          format: email
+        role:
+          type: string
+          enum: [user, admin]
+        deleted:
+          type: boolean
+      example:
+        _id: 5ebac534954b54139806c112
+        name: fake name
+        _org:
+            _id: 6ebac534954b54139806c113
+            name: fake company
+            email: info@comoany.com
+        email: fake@example.com
+        role: user
+        deleted: false
+
+    Post:
+      type: object
+      properties:
+        _id:
+          type: string
+        caption:
+          type: string
+        comments: 
+          type: object
+          properties:
+            _id: 
+              type: string
+            comment:
+              type: string
+            commentedBy:
+              type: object
+        likes:
+          type: object
+        image:
+          type: object
+        createdBy: 
+          type: object
+      example:
+        _id: 5ebac534954b54139806c112
+        caption: fake name
+        comments:
+            _id: 6ebac534954b54139806c113
+            comment: fake company
+            commentedBy: 6ebac534954b54139806c114
+        likes: 6ebac534954b54139806c114
+        image: user
+        createdBy: 6ebac534954b54139806c114
+
+    Organization:
+      type: object
+      properties:
+        _id:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        deleted:
+          type: boolean
+      example:
+        _id: 5ebac534954b54139806c112
+        name: fake company
+        email: fake@example.com
+        deleted: false
+
+    Token:
+      type: object
+      properties:
+        token:
+          type: string
+        expires:
+          type: string
+          format: date-time
+      example:
+        token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZWJhYzUzNDk1NGI1NDEzOTgwNmMxMTIiLCJpYXQiOjE1ODkyOTg0ODQsImV4cCI6MTU4OTMwMDI4NH0.m1U63blB0MLej_WfB7yC2FTMnCziif9X8yzwDEfJXAg
+        expires: 2020-05-12T16:18:04.793Z
+
+    AuthTokens:
+      type: object
+      properties:
+        access:
+          $ref: '#/components/schemas/Token'
+
+    Error:
+      type: object
+      properties:
+        code:
+          type: number
+        message:
+          type: string
+
+  responses:
+    DuplicateEmail:
+      description: User already exists with this email
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: 400
+            message: User already exists with this email
+    DuplicateOrgEmail:
+      description: Organization already exists with this email
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: 400
+            message: Organization already exists with this email
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: 401
+            message: Please authenticate
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: 403
+            message: Forbidden
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: 404
+            message: Not found
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
