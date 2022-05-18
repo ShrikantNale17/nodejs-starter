@@ -50,7 +50,12 @@ const login = catchAsync(async (req, res) => {
 
 const forgotPassword = catchAsync(async (req, res) => {
   const resetPasswordToken = await tokenService.generateResetPasswordToken(req.body.email);
-  await emailService.sendResetPasswordEmail(req.body.email, resetPasswordToken);
+  const resetPasswordUrl = await emailService.sendResetPasswordEmail(req.body.email, resetPasswordToken);
+  console.log(resetPasswordUrl);
+  // res.writeHead(200, {
+  //   Location: `${resetPasswordUrl}`
+  // }).end();
+  // res.redirect(resetPasswordUrl + "")
   res.status(httpStatus.NO_CONTENT).send();
 });
 
@@ -61,7 +66,12 @@ const resetPassword = catchAsync(async (req, res) => {
 
 const sendVerificationEmail = catchAsync(async (req, res) => {
   const verifyEmailToken = await tokenService.generateVerifyEmailToken(req.user);
-  await emailService.sendVerificationEmail(req.user.email, verifyEmailToken);
+  const verificationEmailUrl = await emailService.sendVerificationEmail(req.user.email, verifyEmailToken);
+  console.log(verificationEmailUrl);
+  // res.writeHead(301, {
+  //   Location: `${verificationEmailUrl}`
+  // }).end();
+  // res.redirect(verificationEmailUrl + "")
   res.status(httpStatus.NO_CONTENT).send();
 });
 

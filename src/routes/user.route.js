@@ -4,34 +4,35 @@ const validate = require('../middlewares/validate');
 const upload = require('../middlewares/imageUploader');
 const userValidation = require('../validations/user.validation');
 const userController = require('../controllers/user.controller');
+const parser = require('../middlewares/parser')
 
 const router = express.Router();
 
 // Token authentication for all routes defined in this file
-router.use(auth());
+// router.use(auth());
 
 // Routes: get users, create user
 router
   .route('/')
-  .post(validate(userValidation.createUser), userController.createUser)
-  .get(validate(userValidation.getUsers), userController.getUsers);
+  .post(auth(), parser, validate(userValidation.createUser), userController.createUser)
+  .get(auth('getUsers'), validate(userValidation.getUsers), userController.getUsers);
 
 // Routes: get one user, update user, delete user
 router
   .route('/:userId')
-  .get(validate(userValidation.getUser), userController.getUser)
-  .patch(validate(userValidation.updateUser), userController.updateUser)
-  .delete(validate(userValidation.deleteUser), userController.deleteUser);
+  .get(auth('userDetails'), validate(userValidation.getUser), userController.getUser)
+  .patch(auth('userDetails'), parser, validate(userValidation.updateUser), userController.updateUser)
+  .delete(auth('userDetails'), validate(userValidation.deleteUser), userController.deleteUser);
 
 // Routes: update profile picture
 router
   .route('/:userId/profile_pic')
-  .patch(upload.single('image'), validate(userValidation.updateUserProfilePic), userController.updateUserProfilePic)
+  .patch(auth('userDetails'), upload.single('image'), validate(userValidation.updateUserProfilePic), userController.updateUserProfilePic)
 
 // Routes: update company
 router
   .route('/org/:orgId')
-  .patch(validate(userValidation.updateOrg), userController.updateOrg);
+  .patch(auth(), validate(userValidation.updateOrg), userController.updateOrg);
 
 module.exports = router;
 

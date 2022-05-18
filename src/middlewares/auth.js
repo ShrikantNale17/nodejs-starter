@@ -18,26 +18,35 @@ const verifyCallback = (req, resolve, reject, requiredRights) => {
 
     req.user = user;
 
-    console.log("Hello");
+    // console.log("Hello");
     if (requiredRights.length) {
+      // console.log(user.role);
       const userRights = roleRights.get(user.role);
       const hasRequiredRights = requiredRights.every((requiredRight) => userRights.includes(requiredRight));
-      console.log("Hello");
+      console.log(hasRequiredRights);
       console.log(
         !hasRequiredRights && req.params.userId !== user._id + ""
       );
+      if (user.role === 'user') {
+        console.log(req.params.userId !== req.user._id);
+        if (hasRequiredRights && req.params.userId !== req.user._id + "") {
+          return reject(new ApiError(httpStatus.FORBIDDEN, 'Forbidden'));
+        }
+      }
+
       if (!hasRequiredRights && req.params.userId !== user._id + "") {
         return reject(new ApiError(httpStatus.FORBIDDEN, 'Forbidden'));
       }
-    }
 
+    }
+    // console.log("Hello");
     resolve();
   };
 };
 
 // Access token authentication middleware
 const auth = (...requiredRights) => async (req, res, next) => {
-  console.log(req.headers);
+  // console.log(req.headers);
   return new Promise((resolve, reject) => {
     passport.authenticate('jwt', {
       session: false

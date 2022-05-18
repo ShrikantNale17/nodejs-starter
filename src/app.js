@@ -26,13 +26,22 @@ if (config.env !== 'test') {
 }
 
 // Set necessary HTTP headers for app security
-app.use(helmet());
+// app.use(helmet());
+app.use(
+  helmet.contentSecurityPolicy({
+    useDefaults: true,
+    directives: {
+      "img-src": ["'self'", "https: data:"],
+    },
+  })
+);
 
 // JSON requests are received as plain text. We need to parse the json request body.
 app.use(express.json());
-
+// 
 // app.use(bodyParser.urlencoded({ extended: true }));
-app.use(forms.array());
+// app.use(forms.array());
+// app.use(forms.fields([{name: 'image'}]))
 
 // Parse urlencoded request body if provided with any of the requests
 app.use(express.urlencoded({ extended: true }));
@@ -60,7 +69,8 @@ app.use('/', routes);
 
 //Get image
 
-app.use(auth(), express.static(path.join(__dirname, "uploads")));
+app.use(express.static(path.join(__dirname, "uploads")));
+// app.use(express.static('public'));
 
 // Send back a 404 error for any unknown api request
 app.use((req, res, next) => {
