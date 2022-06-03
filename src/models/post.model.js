@@ -10,19 +10,16 @@ const postSchema = mongoose.Schema(
             type: String,
             required: true
         },
-        likes: {
-            type: Array,
-            default: []
-        },
+        likes: [
+            {
+                type: mongoose.Types.ObjectId,
+                ref: 'User'
+            }
+        ],
         comments: [
             {
-                comment: {
-                    type: String
-                },
-                commentedBy: {
-                    type: mongoose.Types.ObjectId,
-                    ref: 'User'
-                }
+                type: mongoose.Types.ObjectId,
+                ref: 'Comment'
             }
         ],
 

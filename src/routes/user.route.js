@@ -24,10 +24,20 @@ router
   .patch(auth('userDetails'), parser, validate(userValidation.updateUser), userController.updateUser)
   .delete(auth('userDetails'), validate(userValidation.deleteUser), userController.deleteUser);
 
+// Routes: get saved posts of user
+router
+  .route('/:userId/savedPosts')
+  .get(auth('userDetails'), validate(userValidation.getUser), userController.getSavedPosts)
+
 // Routes: update profile picture
 router
   .route('/:userId/profile_pic')
   .patch(auth('userDetails'), upload.single('image'), validate(userValidation.updateUserProfilePic), userController.updateUserProfilePic)
+
+// Routes: update saved posts
+router
+  .route('/:userId/savePost/:postId')
+  .patch(auth('userDetails'), parser, validate(userValidation.updateUserSavedPosts), userController.updateUserSavedPosts)
 
 // Routes: update company
 router

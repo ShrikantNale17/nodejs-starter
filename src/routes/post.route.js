@@ -27,13 +27,28 @@ router
 
 // Route: Like post
 router
-    .route('/like/:postId')
+    .route('/:postId/like')
     .patch(postController.likePost)
+
+// Route: Like comment
+router
+    .route('/comments/:commentId/like')
+    .patch(postController.likeComment)
+
+// Route: Like reply
+router
+    .route('/comments/replies/:replyId/like')
+    .patch(postController.likeReply)
 
 // Route: Add comment on post
 router
-    .route('/comment/:postId')
+    .route('/:postId/comment')
     .patch(validate(postValidation.commentOnPost), postController.commentOnPost)
+
+// Route: Reply to comment of post 
+router
+    .route('/comments/:commentId/reply')
+    .patch(validate(postValidation.replyToComment), postController.replyToComment)
 
 // Routes: update company
 router
@@ -75,12 +90,7 @@ module.exports = router;
  *                 description: At least one image
  *             example:
  *               caption: fake name
- *               image: [
- *                    {
- *                      filename: "image-1652426824614.jpg",
- *                      path: "src/uploads/image-1652431171214.jpg"
- *                    }
- *                  ]
+ *               image: image files
  *     responses:
  *       "201":
  *         description: Created

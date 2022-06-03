@@ -4,37 +4,31 @@ const bcrypt = require('bcryptjs');
 const { private, paginate, softDelete } = require('./plugins');
 // const { roles } = require('../config/roles');
 
-const commentSchema = mongoose.Schema(
+const replySchema = mongoose.Schema(
     {
-        comment: {
+        reply: {
             type: String,
             required: true
+        },
+        repliedBy: {
+            type: mongoose.Types.ObjectId,
+            ref: 'User'
         },
         likes: [
             {
                 type: mongoose.Types.ObjectId,
                 ref: 'User'
             }
-        ],
-        replies: [
-            {
-                type: mongoose.Types.ObjectId,
-                ref: 'Replies'
-            }
-        ],
-        commentedBy: {
-            type: mongoose.Types.ObjectId,
-            ref: 'User'
-        }
+        ]
     },
     {
         timestamps: true,
     }
 );
 
-commentSchema.plugin(softDelete);
-commentSchema.plugin(private);
-commentSchema.plugin(paginate);
+replySchema.plugin(softDelete);
+replySchema.plugin(private);
+replySchema.plugin(paginate);
 
 /**
  * Check if email is taken
@@ -66,8 +60,8 @@ commentSchema.plugin(paginate);
 // });
 
 /**
- * @typedef Comment
+ * @typedef Reply
  */
-const Comment = mongoose.model('Comment', commentSchema);
+const Reply = mongoose.model('Replies', replySchema);
 
-module.exports = Comment;
+module.exports = Reply;

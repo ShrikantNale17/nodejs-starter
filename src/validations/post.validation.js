@@ -50,6 +50,16 @@ const commentOnPost = {
     })
 }
 
+const replyToComment = {
+    params: Joi.object().keys({
+        commentId: Joi.required().custom(objectId),
+    }),
+
+    body: Joi.object().keys({
+        reply: Joi.string().required()
+    })
+}
+
 const updateOrg = {
     params: Joi.object().keys({
         orgId: Joi.required().custom(objectId),
@@ -74,6 +84,7 @@ module.exports = {
     getPost,
     updatePost,
     commentOnPost,
+    replyToComment,
     updateOrg,
     deletePost,
 };

@@ -44,6 +44,13 @@ const updateUser = {
     .min(1),
 };
 
+const updateUserSavedPosts = {
+  params: Joi.object().keys({
+    userId: Joi.required().custom(objectId),
+    postId: Joi.required().custom(objectId)
+  }),
+};
+
 const updateUserProfilePic = {
   params: Joi.object().keys({
     userId: Joi.required().custom(objectId),
@@ -78,6 +85,7 @@ module.exports = {
   getUser,
   updateUser,
   updateUserProfilePic,
+  updateUserSavedPosts,
   // updateOrg,
   deleteUser,
 };

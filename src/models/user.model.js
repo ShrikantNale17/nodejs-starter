@@ -77,7 +77,13 @@ const userSchema = mongoose.Schema(
 		isEmailVerified: {
 			type: Boolean,
 			default: false,
-		}
+		},
+		savedPosts: [
+			{
+				type: mongoose.Types.ObjectId,
+				ref: 'Post'
+			}
+		]
 	},
 	{
 		timestamps: true,

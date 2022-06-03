@@ -1,8 +1,11 @@
 const httpStatus = require('http-status');
 const {
     Post,
+    Comment,
+    Reply,
     PostUsers
 } = require('../models');
+// const Reply = require('../models/reply.model');
 const ApiError = require('../utils/ApiError');
 
 /**
@@ -78,6 +81,7 @@ const updatePostById = async (postId, updateBody) => {
     // if (updateBody.email && (await Post.isEmailTaken(updateBody.email, postId))) {
     //     throw new ApiError(httpStatus.BAD_REQUEST, 'Post already exists with this email');
     // }
+
     Object.assign(post, updateBody);
     await post.save();
     return post;
@@ -99,10 +103,51 @@ const likePostById = async (postId, updateBody) => {
     // }
 
     const likes = post.likes.includes(updateBody.userId) ? post.likes.filter(user => JSON.stringify(user) !== JSON.stringify(updateBody.userId)) : [...post.likes, updateBody.userId];
-
     Object.assign(post, { likes });
     await post.save();
     return post;
+};
+
+/**
+ * Like comment by id
+ * @param {ObjectId} commentId
+ * @param {Object} updateBody
+ * @returns {Promise<Comment>}
+ */
+const likeCommentById = async (commentId, updateBody) => {
+    const comment = await Comment.findById(commentId);
+    if (!comment) {
+        throw new ApiError(httpStatus.BAD_REQUEST, 'Comment not found');
+    }
+    // if (updateBody.email && (await Comment.isEmailTaken(updateBody.email, commentId))) {
+    //     throw new ApiError(httpStatus.BAD_REQUEST, 'Comment already exists with this email');
+    // }
+
+    const likes = comment.likes.includes(updateBody.userId) ? comment.likes.filter(user => JSON.stringify(user) !== JSON.stringify(updateBody.userId)) : [...comment.likes, updateBody.userId];
+    Object.assign(comment, { likes });
+    await comment.save();
+    return comment;
+};
+
+/**
+ * Like comment by id
+ * @param {ObjectId} replyId
+ * @param {Object} updateBody
+ * @returns {Promise<Reply>}
+ */
+const likeReplyById = async (replyId, updateBody) => {
+    const reply = await Reply.findById(replyId);
+    if (!reply) {
+        throw new ApiError(httpStatus.BAD_REQUEST, 'Reply not found');
+    }
+    // if (updateBody.email && (await Reply.isEmailTaken(updateBody.email, replyId))) {
+    //     throw new ApiError(httpStatus.BAD_REQUEST, 'Reply already exists with this email');
+    // }
+
+    const likes = reply.likes.includes(updateBody.userId) ? reply.likes.filter(user => JSON.stringify(user) !== JSON.stringify(updateBody.userId)) : [...reply.likes, updateBody.userId];
+    Object.assign(reply, { likes });
+    await reply.save();
+    return reply;
 };
 
 const commentOnPostById = async (postId, updateBody) => {
@@ -113,12 +158,28 @@ const commentOnPostById = async (postId, updateBody) => {
     // if (updateBody.email && (await Post.isEmailTaken(updateBody.email, postId))) {
     //     throw new ApiError(httpStatus.BAD_REQUEST, 'Post already exists with this email');
     // }
-
-    const comments = [...post.comments, updateBody];
+    const comment = await Comment.create(updateBody)
+    const comments = [...post.comments, comment._id];
 
     Object.assign(post, { comments });
     await post.save();
-    return post;
+    return comment;
+};
+
+const replyToComment = async ({ commentId }, updateBody) => {
+    const comment = await Comment.findById(commentId);
+    if (!comment) {
+        throw new ApiError(httpStatus.BAD_REQUEST, 'Comment not found');
+    }
+    // if (updateBody.email && (await Post.isEmailTaken(updateBody.email, postId))) {
+    //     throw new ApiError(httpStatus.BAD_REQUEST, 'Post already exists with this email');
+    // }
+    const reply = await Reply.create(updateBody)
+    await Comment.findOneAndUpdate({ "_id": commentId }, { $push: { "replies": reply._id } })
+    console.log(comment);
+    const new_comment = await Comment.findById(commentId);
+
+    return reply;
 };
 
 /**
@@ -161,6 +222,9 @@ module.exports = {
     getPostById,
     updatePostById,
     likePostById,
+    likeCommentById,
+    likeReplyById,
     commentOnPostById,
+    replyToComment,
     deletePostById,
 };

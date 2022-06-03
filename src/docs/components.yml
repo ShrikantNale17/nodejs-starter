@@ -43,7 +43,7 @@ components:
         caption:
           type: string
         comments: 
-          type: object
+          type: array
           properties:
             _id: 
               type: string
@@ -52,21 +52,31 @@ components:
             commentedBy:
               type: object
         likes:
-          type: object
+          type: array
         image:
-          type: object
+          type: array
         createdBy: 
           type: object
+        deleted:
+          type: boolean
       example:
         _id: 5ebac534954b54139806c112
         caption: fake name
         comments:
-            _id: 6ebac534954b54139806c113
-            comment: fake company
-            commentedBy: 6ebac534954b54139806c114
-        likes: 6ebac534954b54139806c114
-        image: user
+          [
+            {
+              _id: 6ebac534954b54139806c113,
+              comment: fake company,
+              commentedBy: 6ebac534954b54139806c114
+            }
+          ]
+        likes: [6ebac534954b54139806c114]
+        image: [{
+                    filename: image-1652431171168.jpg,
+                    path: src/uploads/image-1652431171168.jpg
+                }]
         createdBy: 6ebac534954b54139806c114
+        deleted: false
 
     Organization:
       type: object

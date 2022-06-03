@@ -1,7 +1,8 @@
 const httpStatus = require('http-status');
 const {
   User,
-  Organization
+  Organization,
+  Post
 } = require('../models');
 const ApiError = require('../utils/ApiError');
 
@@ -53,6 +54,15 @@ const getUserById = async (id) => {
 };
 
 /**
+ * Get user by id
+ * @param {ObjectId} id
+ * @returns {Promise<User>}
+ */
+const getSavedPosts = async (id) => {
+  return User.findById(id).select('savedPosts');
+};
+
+/**
  * Get user by email
  * @param {string} email
  * @returns {Promise<User>}
@@ -78,6 +88,30 @@ const updateUserById = async (userId, updateBody) => {
     throw new ApiError(httpStatus.BAD_REQUEST, 'User already exists with this email');
   }
   Object.assign(user, updateBody);
+  await user.save();
+  return user;
+};
+
+/**
+ * Update user by id
+ * @param {ObjectId} userId
+ * @param {Object} updateBody
+ * @returns {Promise<User>}
+ */
+const updateUserSavedPostsById = async (userId, postId) => {
+  const user = await getUserById(userId);
+  if (!user) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'User not found');
+  }
+  /* if (updateBody.email && (await User.isEmailTaken(updateBody.email, userId))) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'User already exists with this email');
+  } */
+  const post = await Post.findById(postId);
+  if (!post) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Post not found');
+  }
+  const savedPosts = user.savedPosts.includes(postId) ? user.savedPosts.filter(post => JSON.stringify(post) !== JSON.stringify(postId)) : [...user.savedPosts, postId];
+  Object.assign(user, { savedPosts });
   await user.save();
   return user;
 };
@@ -120,8 +154,10 @@ module.exports = {
   createOrg,
   queryUsers,
   getUserById,
+  getSavedPosts,
   getUserByEmail,
   updateUserById,
+  updateUserSavedPostsById,
   updateOrgById,
   deleteUserById,
 };
