@@ -6,6 +6,7 @@ const createPost = {
         // email: Joi.string().required().email(),
         // password: Joi.string().required().custom(password),
         caption: Joi.string().required(),
+        location: Joi.string().required(),
         image: Joi.string(),
         // role: Joi.string().required().valid('user', 'admin'),
     }),

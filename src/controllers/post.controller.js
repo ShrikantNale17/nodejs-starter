@@ -12,6 +12,7 @@ const createPost = catchAsync(async (req, res) => {
     const post = await (await postService.createPost({
         createdBy: req.user._id,
         caption: req.body.caption,
+        location: req.body.location,
         image: req.files.map(({ filename, path }) => ({ filename, path }))
     })).populate([{
         path: "createdBy likes",

@@ -10,6 +10,10 @@ const postSchema = mongoose.Schema(
             type: String,
             required: true
         },
+        location: {
+            type: String,
+            required: true
+        },
         likes: [
             {
                 type: mongoose.Types.ObjectId,
