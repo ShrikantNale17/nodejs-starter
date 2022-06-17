@@ -17,12 +17,18 @@ router
   .post(auth(), parser, validate(userValidation.createUser), userController.createUser)
   .get(auth('getUsers'), validate(userValidation.getUsers), userController.getUsers);
 
+// Routes: change password
+router
+  .route('/changePassword')
+  .patch(auth(), parser, validate(userValidation.changePassword), userController.changePassword)
+
 // Routes: get one user, update user, delete user
 router
   .route('/:userId')
   .get(auth('userDetails'), validate(userValidation.getUser), userController.getUser)
   .patch(auth('userDetails'), parser, validate(userValidation.updateUser), userController.updateUser)
-  .delete(auth('userDetails'), validate(userValidation.deleteUser), userController.deleteUser);
+  .delete(auth('userDetails'), validate(userValidation.deleteUser), userController.deleteUser)
+
 
 // Routes: get saved posts of user
 router

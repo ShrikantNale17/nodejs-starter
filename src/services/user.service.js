@@ -53,6 +53,18 @@ const getUserById = async (id) => {
   return User.findById(id);
 };
 
+
+const changePassword = async (uid, { currentPass, newPass }) => {
+  const user = await getUserById(uid);
+  const isCurrentPassCorrect = await user.isPasswordMatch(currentPass);
+  if (!isCurrentPassCorrect) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'current password is not correct');
+  }
+  Object.assign(user, { password: newPass })
+  await user.save();
+  return user;
+}
+
 /**
  * Get user by id
  * @param {ObjectId} id
@@ -154,6 +166,7 @@ module.exports = {
   createOrg,
   queryUsers,
   getUserById,
+  changePassword,
   getSavedPosts,
   getUserByEmail,
   updateUserById,

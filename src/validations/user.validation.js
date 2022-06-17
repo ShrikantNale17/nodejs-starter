@@ -27,6 +27,13 @@ const getUser = {
   }),
 };
 
+const changePassword = {
+  body: Joi.object().keys({
+    currentPass: Joi.string().required(),
+    newPass: Joi.string().required(),
+  })
+}
+
 const updateUser = {
   params: Joi.object().keys({
     userId: Joi.required().custom(objectId),
@@ -35,9 +42,11 @@ const updateUser = {
     .keys({
       email: Joi.string().email(),
       password: Joi.string().custom(password),
+      firstname: Joi.string(),
+      lastname: Joi.string(),
       username: Joi.string(),
-      bio: Joi.string(),
-      gender: Joi.string(),
+      bio: Joi.string().default(''),
+      gender: Joi.string().default(''),
       DOB: Joi.string(),
       mobile: Joi.string()
     })
@@ -57,7 +66,7 @@ const updateUserProfilePic = {
   }),
   body: Joi.object()
     .keys({
-      image: Joi.string()
+      image: Joi.string().default('')
     })
 };
 
@@ -83,6 +92,7 @@ module.exports = {
   createUser,
   getUsers,
   getUser,
+  changePassword,
   updateUser,
   updateUserProfilePic,
   updateUserSavedPosts,

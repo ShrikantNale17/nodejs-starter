@@ -14,6 +14,11 @@ const createUser = catchAsync(async (req, res) => {
 	res.status(httpStatus.CREATED).send(user);
 });
 
+const changePassword = catchAsync(async (req, res) => {
+	const result = await userService.changePassword(req.user._id, req.body);
+	res.status(httpStatus.OK).send({ message: 'Successfully Updated' });
+})
+
 const getUsers = catchAsync(async (req, res) => {
 	const filter = pick(req.query, ['name', 'role']);
 	const options = pick(req.query, ['sortBy', 'limit', 'page']);
@@ -70,7 +75,7 @@ const updateUser = catchAsync(async (req, res) => {
 });
 
 const updateUserProfilePic = catchAsync(async (req, res) => {
-	const user = await userService.updateUserById(req.params.userId, { image: req.file.filename })
+	const user = await userService.updateUserById(req.params.userId, { image: req.file ? req.file.filename : '' })
 	// .populate("_id firstname email");
 	res.send(user);
 });
@@ -114,6 +119,7 @@ module.exports = {
 	createUser,
 	getUsers,
 	getUser,
+	changePassword,
 	getSavedPosts,
 	updateUser,
 	updateUserProfilePic,

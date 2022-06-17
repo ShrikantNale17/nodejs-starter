@@ -102,7 +102,7 @@ If you did not request any password resets, then ignore this email.`;
 const sendVerificationEmail = async (to, token) => {
   const subject = 'Email Verification';
   // replace this url with the link to the email verification page of your front-end app
-  const verificationEmailUrl = `${config.siteUrl}/auth/verify-email?token=${token}`;
+  const verificationEmailUrl = `${config.siteUrl}/auth/verify-email?method=post&token=${token}`;
   // console.log(to, verificationEmailUrl);
   const text = `Dear user,
 To verify your email, click on this link: ${verificationEmailUrl}
